@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% block head %}
+{% include 'components/head.html' %}
+{% endblock %}
+<title> Login | KanoteX </title>
+</head>
+<body>
+{% block main %}
+{% endblock %}
+<footer class="bg-secondary position-sticky" style="height: 15rem;">
+{% block footer %}
+{% endblock %}
+</footer>
+{% block script %}
+  {% include 'components/scripts.html' %}
+{% endblock %}
+</body>
+</html>

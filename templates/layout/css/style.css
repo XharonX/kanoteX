@@ -1,0 +1,107 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppin:wght@100;200;300;400;500;&display=swap');
+*{
+ margin: 0;
+ padding: 0;
+ box-sizing: border-box;
+ font-family: 'Poppin', sans-serif;
+}
+
+body {
+    width: 100%;
+    background: #e5e7eb;
+    position: relative;
+    display: flex;
+}
+
+#menu{
+    background: #111827;
+    width: 300px;
+    height: 100%;
+}
+#menu .logo{
+    display: flex;
+    align-items: center;
+    color: #fff;
+    padding: 30px 0 0 30px;
+}
+
+#menu .logo img{
+    width: 40;
+    margin-right: 15px;
+}
+
+#menu items{
+    margin-top: 40px;
+}
+
+#menu items li{
+    list-style: none;
+    padding: 15px 0;
+}
+
+#menu .items li:hover{
+    background: #253047;
+    cursor: pointer;
+}
+
+#menu .items li:nth-child(1){
+    border-left: 4px solid #fff;
+}
+
+#menu .items li:hover i,
+#menu .items li:hover a {
+    color: #f3f4f6;
+}
+
+#menu .items li i{
+    color: rgb(134, 141, 151);
+    width: 40px;
+    height: 40px;
+    line-height: 30px;
+    font-size: 15px;
+    margin: 0 10px 0 25px;
+}
+
+#menu .items li i a{
+    color: rgb(134, 141, 151);
+    font-weight: 300px;
+    transition: 0.3s ease; 
+
+} 
+#interface{
+    width: calc(100% - 300px);
+}
+
+#interface nav{
+    background: #fff;
+    border-bottom: 3px solid #594ef7;
+}
+
+#interface nav .search{
+    display: flex;
+    padding: 10px 14px;
+    border: 1px solid #d7dbe6;
+}
+
+#interface nav .search i{
+    margin-right: 14px;
+}
+
+#interface nav .search input{
+    font-size: 14px;
+}
+
+
+#interface nav .profile{
+}
+
+#interface nav .profile i{
+    margin-right: 20px;
+    font-size: 19px;
+    font-weight: 400;
+}
+
+#interface nav .profile img{
+}
+
+#interface 

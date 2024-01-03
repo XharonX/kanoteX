@@ -1,0 +1,131 @@
+{% extends 'layout/mybase.html' %}
+{% block title %} Finding Result {% endblock %}
+{% block content %}
+  <div class="container">
+    {% csrf_token %}
+    {% if messages %}
+    {% for message in messages %}
+
+    {% endfor %}
+    {% endif %}
+    <article class="container m-1 mt-3 p-4 mb-5 bg-body-tertiary rounded-4 border border-info border-2 shadow-sm">
+      <h3 class="text-center mb-3"> Service Form</h3>
+      <hr>
+      <div class="row">
+        <div class="col">
+          <div class="form-control border-black mb-3">
+            {{ received_form.customer }}
+          </div>
+          <div class="form-control border-black mb-3">
+            {{ received_form.product.name }}
+          </div>
+
+        </div>
+        <div class="col offset-md-4">
+          <div class="d-inline-flex form-control border-black justify-items-between mb-3">
+          {{ received_form.purchase_date|date:"d/m/Y" }}
+          {{ received_form.purchased_date|date:"d/m/Y" }}
+          </div>
+          <div class="form-control border-black mb-3">
+            {{ received_form.purchase_shop }}
+            {{ received_form.purchased_shop }}
+          </div>
+        </div>
+      </div>
+    <table class="table table-borderless m-2">
+      <thead>
+        <tr class="">
+          <th scope="col">Code</th>
+          <th scope="col"> Item Name </th>
+          <th scope="col">Qty</th>
+        </tr>
+      </thead>
+      <tbody class="p-4">
+        <tr>
+          <td id="code">{{ received_form.product.code }}</td>
+          <td id="name">{{ received_form.product.name }}</td>
+          <td>
+            {{ received_form.qty }}
+          </td>
+          <!-- Add more cells as needed -->
+        </tr>
+        <tr>
+          <td>Accessories</td>
+          <td colspan="2">
+            {{ received_form.accessories }}
+          </td>
+        </tr>
+        <tr>
+          <td>Physical Damage</td>
+          <td colspan="2">
+            {{ received_form.user_dmg }}
+          </td>
+        </tr>
+        <tr>
+          <td>Error Reason <hr></td>
+          <td colspan="2">
+            {{ received_form.reason }}
+            <hr>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3">
+            {# if form.is_checked #}
+            <form method="POST" class="">
+              {% csrf_token %}
+              <table class="table table-borderless m-2">
+                <tbody>
+                  <tr>
+              <td>{{ form.finding.label }}</td>
+              <td colspan="2">{{ form.finding }}</td>
+            </tr>
+              <tr>
+                <td>{{ form.fnl_decision.label }}</td>
+                <td colspan="2">{{ form.fnl_decision }}</td>
+              </tr>
+              <tr>
+                <td>{{ form.fees.label }}</td>
+                <td colspan="2">{{ form.fees }}</td>
+              </tr>
+              <tr>
+                <td>{{ form.fees_by.label }}</td>
+                <td colspan="2">
+                  {% for option in form.fees_by %}
+                  <div class="form-check form-check-inline d-flex-inline align-items-center justify-content-between">
+                    {{ option }}
+                  </div>
+                  {% endfor %}
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="3" >
+                    <div class="offset-md-4 d-flex">
+                      {% if request.user.dept_id == 1 %}
+                      <input class="btn btn-primary offset-md-5" type="submit" value="Ready" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Technician ဘက်မှ checked process ပြီးပါပြီ။">
+                      {% elif request.user.dept_id == 2 or request.user.dept_id == 1 %}
+                        {% if form.checked %}
+                      <input class="btn btn-primary offset-md-5 rounded-pill" type="submit" value="Finish" >
+                        {% else %}
+                      <input class="btn btn-primary disabled offset-md-5 rounded-pill" type="submit" value="Approved" >
+                        {% endif %}
+                      {% elif request.user.dept_id == 3 %}
+                        {% if form.done %}
+                      <input class="btn btn-primary offset-md-5 rounded-pill" type="submit" value="Done" >
+                        {% else %}
+                      <input class="btn btn-primary disabled offset-md-5 rounded-pill" type="submit" value="Received" >
+                      <input class="btn btn-primary rounded-pill offset-md-5" type="submit" value="Checked" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Technician ဘက်မှ checked process ပြီးပါပြီ။">
+                        {% endif %}
+                      {% endif %}
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    </article>
+  </div>
+{% endblock %}

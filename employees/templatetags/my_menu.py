@@ -1,0 +1,1 @@
+from django.apps import appsfrom django import templatefrom  django.urls import reverse_lazy, NoReverseMatchregister = template.Library()@register.simple_tagdef all_apps_urls():    ...

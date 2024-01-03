@@ -1,0 +1,95 @@
+{% extends 'layout/mybase.html' %}
+{% block title %} KanoteX | Service Form {% endblock %}
+
+
+{% block content %}
+  <form method="POST" class="container container-sm">
+    {% csrf_token %}
+    <article class="container container-sm m-1 mt-3 p-4 mb-5 bg-body-tertiary rounded-3 border border-primary border-2">
+      <h3 class="text-center mb-3"> Service Form</h3>
+      <hr>
+      <div class="row">
+        <div class="col">
+          <div class="form-floating mb-3">
+            {{ form.customer }}
+            <label for="customerName">customer name</label>
+          </div>
+          <div class="form-floating mb-3">
+            {{ form.product }}
+            <label for="productCode">product code</label>
+          </div>
+
+        </div>
+        <div class="col offset-md-4">
+          <div class="d-inline-flex justify-items-between mb-3">
+          <label for="purchaseDate"> purchase date</label>
+          {{ form.purchase_date }}
+          </div>
+          <div class="form-floating mb-3">
+            {{ form.purchase_shop }}
+            <label for="purchaseShop">purchase shop</label>
+          </div>
+        </div>
+      </div>
+    <table class="table table-borderless text-center overflow-x-auto">
+      <thead>
+        <tr>
+          <th scope="col">Code</th>
+          <th scope="col"> Item Name </th>
+          <th scope="col">Qty</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td id="code">code</td>
+          <td id="name">item name</td>
+          <td>
+            {{ form.qty }}
+          </td>
+          <!-- Add more cells as needed -->
+        </tr>
+        <tr>
+          <td>Accessories</td>
+          <td colspan="2">
+            {{ form.accessories }}
+          </td>
+        </tr>
+        <tr>
+          <td>Physical Damage</td>
+          <td colspan="2">
+            {{ form.physical_dmg }}
+          </td>
+        </tr>
+        <tr>
+          <td>Error Reason</td>
+          <td colspan="2">
+            {{ form.reason }}
+          </td>
+        </tr>
+        <tr>
+          <td>ဘယ်လိုဖြစ်ပေါ်သလဲ။</td>
+          <td colspan="2">
+            {{ form.how_happen }}
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3">
+            {% if request.user.is_authenticated and request.user.dept.name == 'Sale & Service' %}
+
+            <input class="btn btn-primary offset-md-5" type="submit" value="Submit" />
+            {% elif request.user.is_authenticated %}
+            <input class="btn btn-primary offset-md-5 disabled" type="submit" value="Submit" />
+            {% else %}
+
+            {% endif %}
+          </td>
+        </tr>
+        <!-- Add more rows as needed -->
+      </tbody>
+    </table>
+    </article>
+  </form>
+{% endblock %}
+
+
+

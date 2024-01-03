@@ -1,0 +1,1 @@
+from employees.models import Departmentfrom django.db.models import Qclass Dept:    TECH_DEPT = Department.objects.get(Q(name__icontains="Tech")).id    SALE_DEPT = Department.objects.get(Q(name__icontains="SALE")).id

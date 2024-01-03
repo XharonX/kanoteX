@@ -1,0 +1,107 @@
+{% extends 'layout/mybase.html' %}
+{% block title %} KanoteX | Service Form {% endblock %}
+{% block content %}
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-sm-12 col-xl-12">
+        <div class="card">
+<!--          <div class="card-header">-->
+<!--            <h5 style="font-weight: 600;"> Service Form </h5>-->
+<!--          </div>-->
+          <div class="card-body">
+              <h5>Service Form</h5>
+            <hr>
+            <form method="POST">
+              {% csrf_token %}
+              <div class="row">
+                <div class="col-md-5">
+                  <div class="form-floating mb-3">
+                    {{ form.customer }}
+                    <label for="customerName"> customer name</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    {{ form.so_no }}
+                    <label for="soNo"> SO:</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                  </div>
+                </div>
+                <div class="col-md-5">
+
+                  <div class="form-floating mb-3">
+                    {{ form.purchased_shop }}
+                    <label for="purchase_shop"> purchase shop</label>
+                  </div>
+                  <div class="form-floating mb-3 border rounded-4 ps-3 py-2">
+                    <div>
+                    <label for="purchasedDate"> purchase date</label>
+                    <div class="d-inline-flex justify-items-between m-b-3">
+                      {{ form.purchased_date }}
+                    </div>
+                    </div>
+                  </div>
+                  <div class="form-floating mb-3">
+                  </div>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-borderless">
+                  <thead>
+                    <tr>
+                      <th>Code</th>
+                      <th>Item Name</th>
+                      <th>Qty</th>
+                    </tr>
+                    </thead>
+                  <tbody>
+                    <tr>
+                      <td id="codE">{{ form.product }}</td>
+                      <td id="name">item name</td>
+                      <td>{{ form.qty }}</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Accessories</th>
+                      <td colspan="2">
+                        {{ form.accessories }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Physical Damage</th>
+                      <td colspan="2">
+                        {{ form.user_dmg }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row"> Error Reason</th>
+                      <td colspan="2">
+                        {{ form.reason }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row"> Detail</th>
+                      <td colspan="2">
+                        {{ form.how }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="3" class="">
+                        {% if request.user.is_authenticated %}
+                        <input class="btn btn-primary float-right {% if request.user.dept_id != 3 %} disabled {% endif %}" type="submit" value="Upload" />
+                        {% endif %}
+                        {% if request.resolver_match.url_name == 'edit_service_form' %}
+                        <button class="btn btn-danger float-right" type="submit"> <i class="feather icon-delete"></i></button>
+                        {% endif %}
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </article>
+</form>
+{% endblock %}

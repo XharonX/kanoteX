@@ -1,0 +1,52 @@
+{% extends 'layout/mybase.html' %}
+{% block title %} Dashboard {% endblock %}
+
+{% block content %}
+<div class="container-fluid p-4" >
+  <h2 class="py-3 "> Dashboard </h2>
+  <div class="row">
+    {% include 'pages/status.html' %}
+       {# include 'blocks/products.html #}
+       {# include 'blocks/something.html #}
+       {# elif request.user.other #}
+       {# else #}
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header bg-info">
+        <h4><a href="{% url 'error_list' %}" class="text-decoration-none text-dark"> Received Error List </a></h4>
+      </div>
+      <div class="card-body shadow">
+        <table class="table table-sm">
+          <tr>
+            <th>Product</th>
+            <th>Date Received</th>
+            <th>Error</th>
+            <th>Status</th>
+            <th>Ready</th>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header bg-info">
+        <h4>Error Analysis</h4>
+      </div>
+      <div class="card-body shadow">
+        <table class="table table-sm">
+          <tr>
+            <th>Product</th>
+            <th>Date Received</th>
+            <th>Error</th>
+            <th>Status</th>
+            <th>Ready</th>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'layout/mybase.html' %}
+{% block head %}
+ {% include 'components/head.html' %}
+<title> Create Employee | KanoteX </title>
+{% endblock %}
+
+{% block content %}
+<form method="post" class="">
+  <section>
+    <h3 class="text-center my-3"> Employee User Creation Form</h3>
+    <hr>
+    <div class="row justify-content-center border border-primary rounded-4 py-2">
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="col-sm-4 m-2">
+        {% if field.label == 'Gender' %}
+        <div class="d-flex-inline align-items-center justify-content-around">
+          <span class="h6 me-2">
+          {{ field.label }}
+        </span>
+          {% for option in field %}
+        <div class="form-check form-check-inline ms-2">
+          {{ option }}
+        </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="form-floating mb-3">
+          {{ field }}
+          <label for="{{ field.id_for_label }}"> {{ field.label }}</label>
+        </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+      <div class="col-sm-4 m-2 floating-left">
+        <input type="submit" class="btn btn-outline-success rounded-5 p-2 px-3 shadow" value="New employee">
+      </div>
+    </div>
+  </section>
+</form>
+{% endblock %}
+{% block footer %}
+{% include 'components/footer.html' %}
+{% endblock %}

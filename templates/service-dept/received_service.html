@@ -1,13 +1,13 @@
 {% extends 'layout/mybase.html' %}
+{% block addonhead %}
+{% include 'service-dept/get_product_info_addon.html' %}
+{% endblock %}
 {% block title %} KanoteX | Service Form {% endblock %}
 {% block content %}
     {% csrf_token %}
     <div class="row">
       <div class="col-sm-12 col-xl-12">
         <div class="card">
-<!--          <div class="card-header">-->
-<!--            <h5 style="font-weight: 600;"> Service Form </h5>-->
-<!--          </div>-->
           <div class="card-body">
               <h5>Service Form</h5>
             <hr>
@@ -86,10 +86,18 @@
                     <tr>
                       <td colspan="3" class="">
                         {% if request.user.is_authenticated %}
-                        <input class="btn btn-primary float-right {% if request.user.dept_id != 3 %} disabled {% endif %}" type="submit" value="Upload" />
-                        {% endif %}
-                        {% if request.resolver_match.url_name == 'edit_service_form' %}
-                        <button class="btn btn-danger float-right" type="submit"> <i class="feather icon-delete"></i></button>
+                          {% if request.user.dept_id != kanoteDepartments.TECH %}
+                            {% if request.resolver_math.url_name == 'services:edit_service_form' %}
+                          <div class="d-inline-flex justify-content-arount align-items-center float-right">
+                            <input class="btn btn-primary me-3" type="submit" value="Update" />
+                            <a href="{% url 'services:del-received_error' %}" class="btn btn-primary me-3" type="submit"> Del </a>
+                          </div>
+                            {% else %}
+                          <input class="btn btn-primary float-right me-3" type="submit" value="Upload" />
+                            {% endif %}
+                          {% else %}
+                          <input class="btn btn-primary float-right disabled me-3" type="submit" value="Upload" />
+                          {% endif %}
                         {% endif %}
                       </td>
                     </tr>
@@ -101,7 +109,6 @@
         </div>
       </div>
     </div>
-
   </article>
 </form>
 {% endblock %}

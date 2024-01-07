@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.dispatch import receiver
 from employees.models import Employee, Technician, Sale
 from productions.models import Product
+from django.shortcuts import reverse
 # from sale.models import OnlineSale
 # Create your models here.
 
@@ -11,6 +12,15 @@ from productions.models import Product
 class FeeBy(models.TextChoices):
     comp = ('comp', 'company')
     cust = ('cust', 'customer')
+
+class ServicingState(models.TextChoices):
+    uncheck = 'nc', 'uncheck'
+    serve = 's', 'servicing'
+    check = 'c', 'checked'
+    approve = 'y', 'approved'
+    deny = 'n', 'deny'
+    done = 'd', 'done'
+
 
 class ErrorReturn(models.Model):
     STATUS = [
@@ -34,6 +44,10 @@ class ErrorReturn(models.Model):
     received_by = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True)
     received_at = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
+    # status = models.CharField(max_length=30, choices=ServicingState.choices, default='uncheck')
+
+    def get_absolute_url(self):
+        return reverse('services:finding', kwargs={'pk': self.pk})
 
     def __str__(self):
         return str(self.product) + " --> " + str(self.reason)

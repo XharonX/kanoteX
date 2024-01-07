@@ -3,6 +3,8 @@ from django.utils.translation import gettext_lazy as _
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+
+
 # Create your models here.
 
 
@@ -12,7 +14,9 @@ class Employee(AbstractUser):
     position = models.ForeignKey('Position', related_name='position', on_delete=models.SET_NULL, null=True)
     salary = models.IntegerField(_('salary'), blank=True, null=True, default=0)
     contact = models.CharField(_('phone'), max_length=12, blank=True, null=True)
-    gender = models.CharField(_('gender'), max_length=10, choices=(('male', 'male'), ('female', 'female'), ('none', 'none')), blank=True, default='none', )
+    gender = models.CharField(_('gender'), max_length=10,
+                              choices=(('male', 'male'), ('female', 'female'), ('none', 'none')), blank=True,
+                              default='none', )
     age = models.IntegerField(_('age'), blank=True, null=True)
 
     def __str__(self):
@@ -25,12 +29,14 @@ class Employee(AbstractUser):
 
 class Position(models.Model):
     name = models.CharField(_('position'), max_length=100)
+
     def __str__(self):
-        return self.name[:4].upper()
+        return self.name[:5].upper()
 
 
 class Department(models.Model):
     name = models.CharField(_('department'), max_length=100)
+
     def __str__(self):
         return self.name[:4].upper()
 
@@ -80,3 +86,22 @@ class Others(Employee):
         proxy = True
         verbose_name = 'Others'
 
+
+class DepartmentManager:
+    def __init__(self):
+        self._load_attribute()
+
+    def _load_attribute(self):
+        departments = Department.objects.all()
+        for dept in departments:
+            self.__setattr__(f'{dept.name[:4].upper()}', dept.id)
+
+
+class PositionManager:
+    def __init__(self):
+        self._load_attribute()
+
+    def _load_attribute(self):
+        positions = Position.objects.all()
+        for pos in positions:
+            self.__setattr__(f'{pos.name[:5].upper()}', pos.id)

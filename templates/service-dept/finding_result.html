@@ -1,5 +1,6 @@
 {% extends 'layout/mybase.html' %}
 {% block title %} Finding Result {% endblock %}
+
 {% block content %}
   <div class="container">
     {% csrf_token %}
@@ -100,15 +101,14 @@
                 <tr>
                   <td colspan="3" >
                     <div class="offset-md-4 d-flex">
-                      {% if request.user.dept_id == 1 %}
-                      <input class="btn btn-primary offset-md-5" type="submit" value="Ready" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Technician ဘက်မှ checked process ပြီးပါပြီ။">
-                      {% elif request.user.dept_id == 2 or request.user.dept_id == 1 %}
+                      {% if request.user.dept_id == kanoteDepartments.TECH %}
                         {% if form.checked %}
-                      <input class="btn btn-primary offset-md-5 rounded-pill" type="submit" value="Finish" >
+                      <input class="btn btn-primary offset-md-5 rounded-pill" type="submit" value="Approve" >
+
                         {% else %}
-                      <input class="btn btn-primary disabled offset-md-5 rounded-pill" type="submit" value="Approved" >
+                      <input class="btn btn-primary offset-md-5 rounded-pill" type="submit" value="Ready" data-bs-toggle="tooltipz" data-bs-placement="top" data-bs-title="Technician ဘက်မှ checked process ပြီးပါပြီ။">
                         {% endif %}
-                      {% elif request.user.dept_id == 3 %}
+                      {% elif request.user.dept_id == kanoteDepartments.SALE %}
                         {% if form.done %}
                       <input class="btn btn-primary offset-md-5 rounded-pill" type="submit" value="Done" >
                         {% else %}

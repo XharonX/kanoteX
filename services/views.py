@@ -8,9 +8,11 @@ from .models import Servicing, ErrorReturn
 from django.http.response import JsonResponse, HttpResponse, HttpResponseForbidden, HttpResponseNotAllowed
 from django.urls import reverse_lazy
 from .forms import ServiceForm, TechFindingForm
-from core.utils import Dept as dept
+from employees.models import DepartmentManager, PositionManager
 # Create your views here.
 
+dept = DepartmentManager()
+pos = PositionManager()
 
 class CreateServiceForm(CreateView):
     form_class = ServiceForm
@@ -20,7 +22,7 @@ class CreateServiceForm(CreateView):
         form = self.form_class(request.POST)
         if form.is_valid():
             user = request.user
-            if request.user.is_authenticated and request.user.dept_id == dept.SALE_DEPT:
+            if request.user.is_authenticated and request.user.dept_id == dept.SALE:
                 received_by = Employee.objects.get(username=user.username)
                 instance = form.save(commit=False)
                 instance.received_by = received_by
@@ -81,12 +83,15 @@ class FindingResultView(UpdateView):
         if tech_form.is_valid():
             try:
                 servicing_instance = instance.servicing
-                servicing_instance.technician = technician
-                servicing_instance.finding = tech_form.cleaned_data['finding']
-                servicing_instance.fnl_decision = tech_form.cleaned_data['fnl_decision']
-                servicing_instance.fees = tech_form.cleaned_data['fees']
-                servicing_instance.fees_by = tech_form.cleaned_data['fees_by']
-                servicing_instance.checked = True
+                if servicing_instance.checked:
+                    servicing_instance.approved = True
+                else:
+                    servicing_instance.technician = technician
+                    servicing_instance.finding = tech_form.cleaned_data['finding']
+                    servicing_instance.fnl_decision = tech_form.cleaned_data['fnl_decision']
+                    servicing_instance.fees = tech_form.cleaned_data['fees']
+                    servicing_instance.fees_by = tech_form.cleaned_data['fees_by']
+                    servicing_instance.checked = True
                 servicing_instance.save()
                 messages.success(request, _("Finished finding. Ready to return back  to customer or shop"))
                 return redirect('services:error_list')

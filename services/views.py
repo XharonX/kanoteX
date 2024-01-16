@@ -14,6 +14,7 @@ from employees.models import DepartmentManager, PositionManager
 dept = DepartmentManager()
 pos = PositionManager()
 
+
 class CreateServiceForm(CreateView):
     form_class = ServiceForm
     template_name = 'service-dept/received_service.html'
@@ -22,6 +23,7 @@ class CreateServiceForm(CreateView):
         form = self.form_class(request.POST)
         if form.is_valid():
             user = request.user
+            print(user)
             if request.user.is_authenticated and request.user.dept_id == dept.SALE:
                 received_by = Employee.objects.get(username=user.username)
                 instance = form.save(commit=False)
@@ -58,11 +60,8 @@ class DeleteServiceForm(DeleteView):
 class ReturnErrorListView(ListView):
     model = ErrorReturn
     template_name = 'service-dept/return_error_list.html'
-    ordering = ['received_at']
-
-    # def get_context_data(self, *, object_list=None, **kwargs):
-    #     context = super().get_context_data()
-    #     context['product'] = object_list.product.name
+    ordering = ['-received_at']
+    paginate_by = 20
 
 
 class FindingResultView(UpdateView):
@@ -82,17 +81,23 @@ class FindingResultView(UpdateView):
             technician = request.user
         if tech_form.is_valid():
             try:
-                servicing_instance = instance.servicing
-                if servicing_instance.checked:
-                    servicing_instance.approved = True
+                servicing = instance.servicing
+
+                if servicing.checked:
+                    servicing.approved = True
+                    servicing.form.status = 'approved'
+
                 else:
-                    servicing_instance.technician = technician
-                    servicing_instance.finding = tech_form.cleaned_data['finding']
-                    servicing_instance.fnl_decision = tech_form.cleaned_data['fnl_decision']
-                    servicing_instance.fees = tech_form.cleaned_data['fees']
-                    servicing_instance.fees_by = tech_form.cleaned_data['fees_by']
-                    servicing_instance.checked = True
-                servicing_instance.save()
+                    servicing.technician = technician
+                    servicing.finding = tech_form.cleaned_data['finding']
+                    servicing.fnl_decision = tech_form.cleaned_data['fnl_decision']
+                    servicing.fees = tech_form.cleaned_data['fees']
+                    servicing.fees_by = tech_form.cleaned_data['fees_by']
+                    if len(servicing.fnl_decision) > 5:
+                        servicing.checked = True
+                        instance.status = 'checked'
+                servicing.save()
+                instance.save()
                 messages.success(request, _("Finished finding. Ready to return back  to customer or shop"))
                 return redirect('services:error_list')
             except ErrorReturn.DoesNotExist() or Servicing.DoesNotExist():

@@ -7,13 +7,16 @@ register = template.Library()
 
 @register.filter
 def fivedaysago(date):
-    today = datetime.today()
-
+    today = datetime.now().astimezone(date.tzinfo)
     delta = today - date
-    if delta < timedelta(days=5):
-        return timesince(date) + 'ago'
-    return date.strftime('%d-%m-%Y')
-
+    if timedelta(days=0) < delta < timedelta(days=2):
+        return 'yesterday'
+    elif delta < timedelta(days=1):
+        return 'today'
+    elif timedelta(days=2) < delta < timedelta(days=5):
+        return str(delta.days) + 'days ago'
+    else:
+        return ' '
 @register.filter
 def months_since(value):
     try:

@@ -3,7 +3,7 @@ from services.models import ErrorReturn, Servicing
 from productions.models import Product
 from django.contrib import messages
 from django.http.response import HttpResponse, HttpResponseNotAllowed, HttpResponseForbidden
-from django.views.generic import View, CreateView, TemplateView, FormView
+from django.views.generic import View, CreateView, TemplateView, FormView, DetailView
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth import authenticate, login
 from .models import Employee
@@ -83,6 +83,11 @@ class DashboardView(TemplateView):
         context['products'] = Product.objects.all()
 
         return context
+
+
+class ProfileView(DetailView):
+    model = Employee
+    template_name = 'employee/profile.html'
 
 
 class EmployeeLogoutView(LogoutView):

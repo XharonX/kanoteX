@@ -25,18 +25,18 @@ class Product(models.Model):
     WARRANTY_MONTHS = [(m * 3, str(m * 3) + ' months') for m in range(1, 8)]
     code = models.CharField('code', max_length=20, unique=True, primary_key=True)
     name = models.CharField('product name', max_length=255, unique=True)
-    # brand = models.ForeignKey(Brand, on_delete=models.SET_NULL, null=True, blank=True)
-    # slug = models.SlugField('slug', blank=True, null=True)
+    brand = models.ForeignKey(Brand, on_delete=models.SET_NULL, null=True, blank=True)
+    slug = models.SlugField('slug', blank=True, null=True)
     price = models.IntegerField('price')
     warranty = models.IntegerField('warranty', choices=WARRANTY_MONTHS)
 
     def get_absolute_url(self):
         return reverse('productions:product-detail', kwargs={'code': self.pk})
 
-    # def save(self, *args, **kwargs):
-    #     if self.slug is None:
-    #         self.slug = slugify(self.name)
-    #     return super().save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        if self.slug is None:
+            self.slug = slugify(self.name)
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.code} ({self.name})"
@@ -51,13 +51,13 @@ class Specification(models.Model):
         return f"{self.product.code} + specifications"
 
 
-# class Image(models.Model):
-#     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, )
-#     image = models.ImageField(upload_to='')
-#     caption = models.CharField(max_length=100, blank=True, null=True)
-#
-#     def __str__(self):
-#         return self.caption
+class Image(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, )
+    image = models.ImageField(upload_to='')
+    caption = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return self.caption
 
 
 class Catalog(models.Model):

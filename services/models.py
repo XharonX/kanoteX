@@ -13,6 +13,7 @@ class FeeBy(models.TextChoices):
     comp = ('comp', 'company')
     cust = ('cust', 'customer')
 
+
 class ServicingState(models.TextChoices):
     uncheck = 'nc', 'uncheck'
     serve = 's', 'servicing'
@@ -23,13 +24,6 @@ class ServicingState(models.TextChoices):
 
 
 class ErrorReturn(models.Model):
-    STATUS = [
-        ('delivering', 'deliver'),
-        ('received', 'received'),
-        ('checked', 'checked'),
-        ('approved', 'approved'),
-        ('done', 'done'),
-    ]
     customer = models.CharField('customer name', max_length=255)
     # so_no = models.ForeignKey(OnlineSale, on_delete=models.SET_NULL, null=True, blank=True)
     so_no = models.CharField(_('Online Sale NO:'), max_length=20, blank=True, null=True)
@@ -44,7 +38,7 @@ class ErrorReturn(models.Model):
     received_by = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True)
     received_at = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
-    # status = models.CharField(max_length=30, choices=ServicingState.choices, default='uncheck')
+    status = models.CharField(max_length=30, choices=ServicingState.choices, default='uncheck')
 
     def get_absolute_url(self):
         return reverse('services:finding', kwargs={'pk': self.pk})
@@ -62,7 +56,7 @@ class Servicing(models.Model):
     fees = models.IntegerField(default=0)
     fees_by = models.CharField(_('fees_by'), max_length=40, choices=FeeBy.choices, default=FeeBy.comp)
     approved = models.BooleanField('approved', default=False, blank=True)
-    done = models.BooleanField('approved', default=False, blank=True)
+    done = models.BooleanField('done', default=False, blank=True)
 
     def __str__(self):
         s = ""
@@ -87,4 +81,15 @@ def created_servicing(sender, instance, created, **kwargs):
     else:
         instance.servicing.form = instance
         instance.servicing.save()
+
+
+# @receiver(post_save, sender=Servicing)
+# def save_changed(sender, instance, created, **kwargs):
+#     if not created:
+#         if instance.checked:
+#             instance.returnerror.status = 'checked'
+#             if instance.approved:
+#                 instance.returnerror.status = 'approved'
+#             # else:
+#             #     instance.returnerror.status = 'deny'
 

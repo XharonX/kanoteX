@@ -1,0 +1,1 @@
+from base64 import urlsafe_b64encodedef safe_url(url):    encoded = url.encode()    return str(urlsafe_b64encode(encoded).decode()) + '/'

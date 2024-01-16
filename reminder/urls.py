@@ -1,0 +1,1 @@
+from django.urls import path, includefrom .views import *urlpatterns = [    path('todolist/', ToDoListView.as_view, name='todolist'),    path('todolist/<slug:slug>', ToDoSpecificView.as_view, name='todolist'),    path('todolist/<slug:slug>/<int:pk>/', ToDoItemSpecificView.as_view, name='todo-item'),]

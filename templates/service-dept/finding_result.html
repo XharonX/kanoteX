@@ -6,7 +6,6 @@
     {% csrf_token %}
     {% if messages %}
     {% for message in messages %}
-
     {% endfor %}
     {% endif %}
     <article class="container m-1 mt-3 p-4 mb-5 bg-body-tertiary rounded-4 border border-info border-2 shadow-sm">
@@ -102,18 +101,16 @@
                   <td colspan="3" >
                     <div class="offset-md-4 d-flex">
                       {% if request.user.dept_id == kanoteDepartments.TECH %}
-                        {% if form.checked %}
-                      <input class="btn btn-primary offset-md-5 rounded-pill" type="submit" value="Approve" >
-
+                        {% if form.checked.value is True %}
+                      <input class="btn btn-primary offset-md-5 rounded-pill" type="submit" value="Approve">
                         {% else %}
                       <input class="btn btn-primary offset-md-5 rounded-pill" type="submit" value="Ready" data-bs-toggle="tooltipz" data-bs-placement="top" data-bs-title="Technician ဘက်မှ checked process ပြီးပါပြီ။">
                         {% endif %}
                       {% elif request.user.dept_id == kanoteDepartments.SALE %}
-                        {% if form.done %}
-                      <input class="btn btn-primary offset-md-5 rounded-pill" type="submit" value="Done" >
-                        {% else %}
-                      <input class="btn btn-primary disabled offset-md-5 rounded-pill" type="submit" value="Received" >
-                      <input class="btn btn-primary rounded-pill offset-md-5" type="submit" value="Checked" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Technician ဘက်မှ checked process ပြီးပါပြီ။">
+                        {% if form.checked.value is True and form.approved.value is True %}
+                      <input class="btn btn-primary offset-md-5 rounded-pill" type="submit" value="Received" >
+                        {% elif form.checked.value is False or form.approved.value is False %}
+                      <input class="btn btn-primary offset-md-5 rounded-pill disabled" type="submit" value="Received" >
                         {% endif %}
                       {% endif %}
                       </div>

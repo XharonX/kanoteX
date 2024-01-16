@@ -47,3 +47,16 @@ def product_delete(request, code):
     return redirect('productions:product-list')
 
 
+class BrandCreationView(CreateView):
+    model = Brand
+    template_name = 'productions/create-brand.html'
+    success_url = 'productions:product-list'
+    form_class = BrandCreationForm
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('create_product')
+
+

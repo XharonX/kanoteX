@@ -9,6 +9,7 @@ from django.http.response import JsonResponse, HttpResponse, HttpResponseForbidd
 from django.urls import reverse_lazy
 from .forms import ServiceForm, TechFindingForm
 from employees.models import DepartmentManager, PositionManager
+import pandas as pd
 # Create your views here.
 
 dept = DepartmentManager()
@@ -161,3 +162,8 @@ def get_product_info(request, product):
 
 def get_warranty_rule(request):
     return render(request, 'service-dept/warranty_rules.html')
+
+
+def analysis_error_return():
+    df = ErrorReturn.objects.all()
+    c_list = df['product_id'].value_counts()

@@ -4,6 +4,7 @@ from .forms import *
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, UpdateView, DeleteView
 from .models import Product, Promotion, CatalogCategory, Catalog
+import pandas as pd
 # Create your views here.
 
 
@@ -32,6 +33,11 @@ class ProductDetailView(DetailView):
     template_name = 'productions/product_detail.html'
     slug_field = 'code'  # new feature for me
     slug_url_kwarg = 'code'  # new feature for me
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['error_return'] = object.errorreturn_set.all()
+        context['label'] = 0
 
 
 class ProductDeletionView(DeleteView):

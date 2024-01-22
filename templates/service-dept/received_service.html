@@ -32,18 +32,8 @@
                     {{ form.purchased_shop }}
                     <label for="purchase_shop"> purchase shop</label>
                   </div>
-                    <div>
-<!--                    <label for="purchasedDate"> purchase date</label>-->
-                      <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
-                        {{ form.purchased_date }}
-                        <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
-                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                        </div>
-                      </div>
-<!--                    <div class="d-inline-flex justify-items-between m-b-3">-->
-<!--                      -->
-<!--                    </div>-->
-                    </div>
+                  <div class="input-group p-1 bg-white">
+                    {{ form.purchased_date }}
                   </div>
                   <div class="form-floating mb-3">
                   </div>
@@ -118,11 +108,5 @@
 </form>
 {% endblock %}
 {% block extra_js %}
-<script>
-  $(function(){
-    $('#datetimepicker1').datetimerpicker({
-      format: 'DD/MM/YYYY',
-    });
-  });
-</script>
+
 {% endblock %}

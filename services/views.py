@@ -38,6 +38,7 @@ class CreateServiceForm(CreateView):
                 return redirect(request.META.get('HTTP_REFERER'))
         else:
             print('hello')
+            print(form.cleaned_data)
             print(form.errors)
             messages.error(request, form.errors)
             return redirect(request.META.get('HTTP_REFERER'))

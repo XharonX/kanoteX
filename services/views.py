@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, UpdateView, ListView, DeleteView
 from productions.models import Product
 from .models import Servicing, ErrorReturn
+from django.db.models import Q
 from django.http.response import JsonResponse, HttpResponse, HttpResponseForbidden, HttpResponseNotAllowed
 from django.urls import reverse_lazy
 from .forms import ServiceForm, TechFindingForm
@@ -33,13 +34,9 @@ class CreateServiceForm(CreateView):
                 messages.success(request, _(f"Error Service has been created {request.user}"))
                 return redirect('services:error_list')
             else:
-                print(form.errors)
                 messages.error(request, form.errors)
                 return redirect(request.META.get('HTTP_REFERER'))
         else:
-            print('hello')
-            print(form.cleaned_data)
-            print(form.errors)
             messages.error(request, form.errors)
             return redirect(request.META.get('HTTP_REFERER'))
 
@@ -65,6 +62,18 @@ class ReturnErrorListView(ListView):
     ordering = ['-received_at']
     paginate_by = 20
 
+    def get_queryset(self):
+        qs = self.request.GET.get('q', '')
+        print(qs)
+        if qs == 'all':
+            result = self.model.objects.all()
+        else:
+            result = self.model.objects.filter(Q(customer__icontains=qs) | Q(purchased_shop__icontains=qs))
+        return result
+
+    def get(self, request, *args, **kwargs):
+        self.object_list = self.get_queryset()
+        return render(request, self.template_name, {'object_list': self.object_list})
 
 class FindingResultView(UpdateView):
     form_class = TechFindingForm
@@ -168,3 +177,5 @@ def get_warranty_rule(request):
 def analysis_error_return():
     df = ErrorReturn.objects.all()
     c_list = df['product_id'].value_counts()
+
+

@@ -4,6 +4,7 @@ from .forms import *
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, UpdateView, DeleteView
 from .models import Product, Promotion, CatalogCategory, Catalog
+from django.db.models import Q
 import pandas as pd
 # Create your views here.
 
@@ -23,9 +24,17 @@ class ProductCreationView(CreateView):
 
 class ProductListView(ListView):
     model = Product
-    template_name = 'productions/view-product=edit-specification.html'
+    template_name = 'productions/product_list.html'
     paginate_by = 20
-    ...
+
+    def get_queryset(self):
+        qs = self.request.GET.get('q', '')
+        rst = self.model.objects.filter(Q(name__icontains=qs) | Q(code__icontains=qs))
+        return rst
+
+    def get(self, request, *args, **kwargs):
+        self.object_list = self.get_queryset()
+        return render(request, self.template_name, {'object_list': self.object_list})
 
 
 class ProductDetailView(DetailView):

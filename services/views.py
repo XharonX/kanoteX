@@ -64,7 +64,6 @@ class ReturnErrorListView(ListView):
 
     def get_queryset(self):
         qs = self.request.GET.get('q', '')
-        print(qs)
         if qs == 'all':
             result = self.model.objects.all()
         else:
@@ -74,6 +73,7 @@ class ReturnErrorListView(ListView):
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
         return render(request, self.template_name, {'object_list': self.object_list})
+
 
 class FindingResultView(UpdateView):
     form_class = TechFindingForm

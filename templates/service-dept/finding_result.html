@@ -17,7 +17,11 @@
             {{ received_form.customer }}
           </div>
           <div class="form-control border-black mb-3">
-            {{ received_form.product.name }}
+            {% if received_form.so_no %}
+            SO-{{ received_form.so_no }}
+            {% else %}
+              <span> empty</span>
+            {% endif %}
           </div>
 
         </div>

@@ -69,7 +69,6 @@ class ReturnErrorListView(ListView):
         if qs is not None:
             result = self.model.objects.filter(Q(customer__icontains=qs) |
                                                Q(purchased_shop__icontains=qs)).order_by(self.ordering)
-
             # Q(product_id__icontains=qs))
             return result
 
@@ -89,16 +88,6 @@ class ReturnErrorListView(ListView):
             'object_list': paginated_data,
         }
         return self.render_to_response(context)
-
-    def items_pr_week(self, week_pg):
-        items = list()
-        try:
-            for item in self.object_list:
-                if week_pg == datetime.date(item.received_at).isocalendar().week:
-                    yield item
-        except ValueError:
-            return "Must be an integer value for week number"
-        # return items
 
 
 class FindingResultView(UpdateView):

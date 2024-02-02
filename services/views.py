@@ -2,15 +2,17 @@ from django.shortcuts import render, redirect
 from employees.models import Employee
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import CreateView, UpdateView, ListView, DeleteView
+from django.views.generic import CreateView, UpdateView, ListView, DeleteView, View
+from django.core.paginator import PageNotAnInteger, EmptyPage
 from productions.models import Product
 from .models import Servicing, ErrorReturn
 from django.db.models import Q
-from django.http.response import JsonResponse, HttpResponse, HttpResponseForbidden, HttpResponseNotAllowed
+from django.http.response import JsonResponse, HttpResponse
 from django.urls import reverse_lazy
 from .forms import ServiceForm, TechFindingForm
+from .mypaginator import WeekPaginator
+from datetime import datetime
 from employees.models import DepartmentManager, PositionManager
-import pandas as pd
 # Create your views here.
 
 dept = DepartmentManager()
@@ -59,20 +61,44 @@ class DeleteServiceForm(DeleteView):
 class ReturnErrorListView(ListView):
     model = ErrorReturn
     template_name = 'service-dept/return_error_list.html'
-    ordering = ['-received_at']
-    paginate_by = 20
+    ordering = '-received_at'
+    # items_per_week = 1  # mean 1 week per page
 
     def get_queryset(self):
         qs = self.request.GET.get('q', '')
-        if qs == 'all':
-            result = self.model.objects.all()
-        else:
-            result = self.model.objects.filter(Q(customer__icontains=qs) | Q(purchased_shop__icontains=qs))
-        return result
+        if qs is not None:
+            result = self.model.objects.filter(Q(customer__icontains=qs) |
+                                               Q(purchased_shop__icontains=qs)).order_by(self.ordering)
+
+            # Q(product_id__icontains=qs))
+            return result
 
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
-        return render(request, self.template_name, {'object_list': self.object_list})
+        paginator = WeekPaginator(self.object_list)
+        page = request.GET.get('page', datetime.date(datetime.today()).isocalendar()[1])
+        try:
+            print(paginator.num_pages())
+            paginated_data = paginator.page(page)
+        except PageNotAnInteger:
+            paginated_data = paginator.page(1)
+        except EmptyPage:
+            paginated_data = paginator.page(paginator.num_pages)
+
+        context = {
+            'object_list': paginated_data,
+        }
+        return self.render_to_response(context)
+
+    def items_pr_week(self, week_pg):
+        items = list()
+        try:
+            for item in self.object_list:
+                if week_pg == datetime.date(item.received_at).isocalendar().week:
+                    yield item
+        except ValueError:
+            return "Must be an integer value for week number"
+        # return items
 
 
 class FindingResultView(UpdateView):

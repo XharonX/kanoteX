@@ -1,1 +1,1 @@
-<!DOCTYPE html><html lang="en"><head>	<meta charset="UTF-8">	<title>Title</title></head><body>	{% block content %}	{% endblock %}</body></html>
+<!DOCTYPE html><html lang="en"><head>	{% block head %}	{% include 'components/head.html' %}	{% endblock %}	<meta charset="UTF-8">	{% block title %}	{% endblock %}</head><body>	{% block main %}	{% endblock %}<footer class="bg-secondary position-sticky" style="height: 15rem;">	{% block footer %}	{% endblock %}</footer>{% block script %}	{% include 'components/scripts.html' %}{% endblock %}</body></html>

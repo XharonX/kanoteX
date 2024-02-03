@@ -44,9 +44,13 @@ class ProductDetailView(DetailView):
     slug_url_kwarg = 'code'  # new feature for me
 
     def get_context_data(self, **kwargs):
+        obj = self.get_object()
         context = super().get_context_data(**kwargs)
-        context['error_return'] = object.errorreturn_set.all()
+        obj.errorreturn_set.all()
+        context['product'] = obj
+        context['error_return'] = obj.errorreturn_set.all()
         context['label'] = 0
+        return context
 
 
 class ProductDeletionView(DeleteView):

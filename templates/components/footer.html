@@ -42,7 +42,7 @@
         <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
           <!-- Content -->
           <h6 class="text-uppercase fw-bold mb-4">
-            <i class="fas fa-gem me-3"></i>Company name
+            <i class="fas fa-gem me-3"></i> Peach United Company
           </h6>
           <p>
             Here you can use rows and columns to organize your footer content. Lorem ipsum
@@ -83,7 +83,7 @@
             <a href="#!" class="text-reset">Warranty Rule</a>
           </p>
           <p>
-            <a href="#!" class="text-reset">How To Use</a>
+            <a href="" class="text-reset">How To Use</a>
           </p>
           <p>
             <a href="#!" class="text-reset">About</a>
@@ -93,10 +93,10 @@
           </p>
           {% elif request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'login' %}
           <p>
-            <a href="#!" class="text-reset">Create Department</a>
+            <a href="{% url 'admin:employees_department_add' %}" class="text-reset">Create Department</a>
           </p>
           <p>
-            <a href="#!" class="text-reset">Create Position</a>
+            <a href="{% url 'admin:employees_position_add' %}" class="text-reset">Create Position</a>
           </p>
           <p>
             <a href="#!" class="text-reset">About</a>

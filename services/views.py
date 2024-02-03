@@ -108,6 +108,9 @@ class FindingResultView(UpdateView):
         if tech_form.is_valid():
             try:
                 servicing = instance.servicing
+                if servicing.approved:
+                    servicing.done = True
+                    servicing.form.status = 'done'
 
                 if servicing.checked:
                     servicing.approved = True
@@ -122,8 +125,8 @@ class FindingResultView(UpdateView):
                     if len(servicing.fnl_decision) > 5:
                         servicing.checked = True
                         instance.status = 'checked'
-                servicing.save()
-                instance.save()
+                servicing.save()  # servicing model was saved.
+                instance.save()  # service form model was saved
                 messages.success(request, _("Finished finding. Ready to return back  to customer or shop"))
                 return redirect('services:error_list')
             except ErrorReturn.DoesNotExist() or Servicing.DoesNotExist():
@@ -187,10 +190,3 @@ def get_product_info(request, product):
 
 def get_warranty_rule(request):
     return render(request, 'service-dept/warranty_rules.html')
-
-
-def analysis_error_return():
-    df = ErrorReturn.objects.all()
-    c_list = df['product_id'].value_counts()
-
-

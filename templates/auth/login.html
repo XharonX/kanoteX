@@ -16,11 +16,11 @@
         {% csrf_token %}
         <div class="form-floating mb-3">
             {{ form.username }}
-            <label for="userName" class="px-4">username</label>
+<!--            <label for="userName" class="px-4">username</label>-->
           </div>
         <div class="form-floating mb-3">
             {{ form.password }}
-            <label class="px-4" for="id_password">password</label>
+<!--            <label class="px-4" for="id_password">password</label>-->
           </div>
         <div class="d-flex-inline justify-content-between align-items-center">
           {% if request.user.is_superuser %}

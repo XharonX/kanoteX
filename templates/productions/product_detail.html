@@ -1,1 +1,1 @@
-hello world
+{% extends 'layout/mybase.html' %}{% block content %}hello world{{ product }}{% if error_return %}{% for i in error_return %}<div>	<span> {{ i.received_at }}</span>	<span>{{ i.reason }}</span></div>{% endfor %}{% else %}<h5>There is no return as error.</h5>{% endif %}{% endblock %}

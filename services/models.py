@@ -49,10 +49,10 @@ class ErrorReturn(models.Model):
 
 class Servicing(models.Model):
     technician = models.ForeignKey(Technician, on_delete=models.SET_NULL, null=True)
-    form = models.OneToOneField(ErrorReturn, on_delete=models.CASCADE) # Error return form
-    finding = models.TextField() # errors finding by technician
-    checked = models.BooleanField(default=False) # is _ checked
-    fnl_decision = models.CharField(max_length=250) # technician final decision
+    form = models.OneToOneField(ErrorReturn, on_delete=models.CASCADE)  # Error return form
+    finding = models.TextField()  # errors finding by technician
+    checked = models.BooleanField(default=False)  # is _ checked
+    fnl_decision = models.CharField(max_length=250)  # technician final decision
     fees = models.IntegerField(default=0)
     fees_by = models.CharField(_('fees_by'), max_length=40, choices=FeeBy.choices, default=FeeBy.comp)
     approved = models.BooleanField('approved', default=False, blank=True)
@@ -81,15 +81,3 @@ def created_servicing(sender, instance, created, **kwargs):
     else:
         instance.servicing.form = instance
         instance.servicing.save()
-
-
-# @receiver(post_save, sender=Servicing)
-# def save_changed(sender, instance, created, **kwargs):
-#     if not created:
-#         if instance.checked:
-#             instance.returnerror.status = 'checked'
-#             if instance.approved:
-#                 instance.returnerror.status = 'approved'
-#             # else:
-#             #     instance.returnerror.status = 'deny'
-

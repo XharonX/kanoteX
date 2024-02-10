@@ -83,9 +83,10 @@ class ReturnErrorListView(ListView):
             paginated_data = paginator.page(1)
         except EmptyPage:
             paginated_data = paginator.page(paginator.num_pages)
-
         context = {
-            'object_list': paginated_data,
+            'page_obj': paginated_data,
+            'object_list': self.object_list,
+
         }
         return self.render_to_response(context)
 

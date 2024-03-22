@@ -1,0 +1,1 @@
+from django.db import modelsfrom django.utils.translation import gettext_lazy as _class Customer(models.Model):    name = models.CharField(_('customer name'), max_length=100)    phone = models.CharField(max_length=11, blank=True)    so_no = models.IntegerField()

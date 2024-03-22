@@ -1,33 +1,31 @@
-{% extends 'layout/mybase.html' %}
+{% extends 'layout/base.html' %}
 {% load static error_filter timesincefilter my_tags %}
 {% block title %} KanoteX | Return Error List {% endblock %}
 {% block content %}
-<div class="row">
-  <ul class="nav nav-pills float-right" id="myTab" role="tablist">
-  <li class="nav-item">
-    <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="false">List</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link active" id="gridview-tab" data-toggle="tab" href="#gridview" role="tab" aria-controls="gridview" aria-selected="true">Grid</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false"> Monthly Analytical</a>
-    
-  </li>
-</ul>
-<div class="tab-content" id="myTabContent">
-  <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
-    {% include 'service-dept/listview.html' %}
-</div>
-  <div class="tab-pane fade show active" id="gridview" role="tabpanel" aria-labelledby="gridview-tab">
-  {% include 'service-dept/gridview.html' %}
-  </div>
-  <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-    <div>
-      <canvas id="monthlyChart" data-url="{% url 'services:monthly-report' %}"></canvas>
-    </div>
-  </div>
-</div>
+<div class="tab-panel">
+	<div class="tab-menu">
+		<button class="tab_btn active">
+			<i class="fas fa-list"></i>
+		</button>
+		<button class="tab_btn">
+			<i class="fas fa-grip-horizontal"></i>
+		</button>
+		<button class="tab_btn">
+			<i class="fas fa-grip-vertical"></i>
+		</button>
+	</div>
+	<div class="content-box">
+		<div class="tab-content active">
+      {% include 'service-dept/list.html' %}
+		</div>
+		<div class="tab-content">
+			blar blar Grid 3 columns
+		</div>
+		<div class="tab-content">
+			blar blar Grid 2 columns
+		</div>
+
+	</div>
 </div>
 <script>
   function getRandomColor(){
@@ -77,3 +75,30 @@
     });
     </script>
 {% endblock %}
+<div class="row">
+  <ul class="nav nav-pills float-right" id="myTab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="false">List</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link active" id="gridview-tab" data-toggle="tab" href="#gridview" role="tab" aria-controls="gridview" aria-selected="true">Grid</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false"> Monthly Analytical</a>
+
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
+    {% include 'service-dept/listview.html' %}
+</div>
+  <div class="tab-pane fade show active" id="gridview" role="tabpanel" aria-labelledby="gridview-tab">
+  {% include 'service-dept/gridview.html' %}
+  </div>
+  <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+    <div>
+      <canvas id="monthlyChart" data-url="{% url 'services:monthly-report' %}"></canvas>
+    </div>
+  </div>
+</div>
+</div>

@@ -2,17 +2,18 @@ from django.shortcuts import render, redirect
 from employees.models import Employee
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import CreateView, UpdateView, ListView, DeleteView, View
+from django.views.generic import CreateView, UpdateView, ListView, DeleteView, FormView, View
 from django.core.paginator import PageNotAnInteger, EmptyPage
 from productions.models import Product
 from .models import Servicing, ErrorReturn
 from django.db.models import Q
 from django.http.response import JsonResponse, HttpResponse
 from django.urls import reverse_lazy
-from .forms import ServiceForm, TechFindingForm
+from .forms import ServiceForm, TechFindingForm, ErrorExchangeRejectForm
 from .mypaginator import WeekPaginator
 from datetime import datetime
 from employees.models import DepartmentManager, PositionManager
+from .monthly_report import reject_list_excel
 # Create your views here.
 
 dept = DepartmentManager()
@@ -21,7 +22,9 @@ pos = PositionManager()
 
 class CreateServiceForm(CreateView):
     form_class = ServiceForm
-    template_name = 'service-dept/received_service.html'
+    temp_file = 'service-dept/received_service.html'
+    file = 'service-dept/receiving_form.html'
+    template_name = temp_file
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
@@ -77,7 +80,6 @@ class ReturnErrorListView(ListView):
         paginator = WeekPaginator(self.object_list)
         page = request.GET.get('page', datetime.date(datetime.today()).isocalendar()[1])
         try:
-            print(paginator.num_pages())
             paginated_data = paginator.page(page)
         except PageNotAnInteger:
             paginated_data = paginator.page(1)
@@ -118,14 +120,15 @@ class FindingResultView(UpdateView):
                     servicing.form.status = 'approved'
 
                 else:
-                    servicing.technician = technician
-                    servicing.finding = tech_form.cleaned_data['finding']
-                    servicing.fnl_decision = tech_form.cleaned_data['fnl_decision']
-                    servicing.fees = tech_form.cleaned_data['fees']
-                    servicing.fees_by = tech_form.cleaned_data['fees_by']
-                    if len(servicing.fnl_decision) > 5:
-                        servicing.checked = True
-                        instance.status = 'checked'
+                    ...
+                servicing.technician = technician
+                servicing.finding = tech_form.cleaned_data['finding']
+                servicing.fnl_decision = tech_form.cleaned_data['fnl_decision']
+                servicing.fees = tech_form.cleaned_data['fees']
+                servicing.fees_by = tech_form.cleaned_data['fees_by']
+                if len(servicing.fnl_decision) > 5:
+                    servicing.checked = True
+                    instance.status = 'checked'
                 servicing.save()  # servicing model was saved.
                 instance.save()  # service form model was saved
                 messages.success(request, _("Finished finding. Ready to return back  to customer or shop"))
@@ -136,6 +139,28 @@ class FindingResultView(UpdateView):
             print(tech_form.errors)
             messages.error(request, tech_form.errors)
             return redirect(request.META.get("HTTP_REFERER"))
+
+
+class ErrorExchangeList(FormView):
+    model = ErrorReturn
+    template_name = 'service-dept/error_exchange_list.html'
+    form_class = ErrorExchangeRejectForm
+
+    def get(self, request, *args, **kwargs):
+        rq = self.request
+        start_date = datetime(int(rq.GET.get('start_date_year', 2024)), int(rq.GET.get('start_date_month', 1)), int(rq.GET.get('start_date_day', 1)))
+        end_date = datetime(int(rq.GET.get('end_date_year', 2024)), int(rq.GET.get('end_date_month', datetime.now().month)), int(rq.GET.get('end_date_day', datetime.now().day)))
+        status = rq.GET.get('status', 'approved')
+        exclude_product = rq.GET.getlist('exclude_product')
+        print(exclude_product)
+        qs = self.model.objects.filter(received_at__range=(start_date, end_date), status=status).exclude(product__in=exclude_product, )
+        context = {
+            'form': self.form_class
+        }
+        if qs is not None:
+            context['object_list'] = qs
+            reject_list_excel(qs)
+        return self.render_to_response(context)
 
 
 class ErrorApprovingView(UpdateView):
